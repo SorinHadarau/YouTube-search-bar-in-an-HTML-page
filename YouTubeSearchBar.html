@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YouTube Search Bar</title>
+</head>
+<body>
+  <div>
+    <form>
+      <input type="text" id="searchTerm" placeholder="Search YouTube...">
+      <button type="button" onclick="search()">Search</button>
+    </form>
+    <div id="results"></div>
+  </div>
+  <script>
+    function search() {
+      // Get the search term
+      var searchTerm = document.getElementById("searchTerm").value;
+      
+      // Use the YouTube Data API to search for videos
+      var url = "https://www.googleapis.com/youtube/v3/search?q=" + searchTerm + "&key=YOUR_API_KEY&part=snippet";
+      
+      // Make an HTTP request to the API
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // Parse the JSON response
+          var data = JSON.parse(xhr.responseText);
+          
+          // Display the results
+          var results = document.getElementById("results");
+          results.innerHTML = "";
+          for (var i = 0; i < data.items.length; i++) {
+            var videoId = data.items[i].id.videoId;
+            var title = data.items[i].snippet.title;
+            var thumbnail = data.items[i].snippet.thumbnails.default.url;
+            results.innerHTML += "<a href='https://www.youtube.com/watch?v=" + videoId + "' target='_blank'><img src='" + thumbnail + "'>" + title + "</a><br>";
+          }
+        }
+      };
+      xhr.send();
+    }
+  </script>
+</body>
+</html>
+
+// :)
